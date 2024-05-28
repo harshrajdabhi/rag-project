@@ -65,7 +65,7 @@ The code includes enhanced logging with color coding. The log levels and their c
 
 - **INFO**: Green
 - **QUESTION**: Blue
-- **RESPONSE**: Magenta
+- **RESPONSE**: Purple
 - **WARNING**: Yellow
 - **ERROR**: Red
 - **CRITICAL**: Red with white background

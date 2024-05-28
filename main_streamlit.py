@@ -1,5 +1,6 @@
 import os
 import logging
+import streamlit as st
 from colorlog import ColoredFormatter
 from llama_index.core import (
     VectorStoreIndex,
@@ -16,7 +17,7 @@ logging.addLevelName(RESPONSE_LOG_LEVEL, "RESPONSE")
 
 # Setup logger
 def setup_logger():
-    logger = logging.getLogger('Query')
+    logger = logging.getLogger('CalidadQuery')
     handler = logging.StreamHandler()
     formatter = ColoredFormatter(
         "%(log_color)s%(levelname)s:%(name)s:%(message)s",
@@ -56,22 +57,24 @@ def create_or_load_index(persist_dir):
         index = load_index_from_storage(storage_context)
     return index
 
-def main():
-    index = create_or_load_index(PERSIST_DIR)
-    query_engine = index.as_query_engine()
-    
-    while True:
-        question = input("Your Question About Provided Doc? (type 'q' to quit)\n")
-        logger.log(QUESTION_LOG_LEVEL, f"Question: {question}")
-        
-        if question.lower() == 'q':
-            logger.info("Exiting the query interface.")
-            break
-        
-        if question:
-            response = query_engine.query(question)
-            logger.log(RESPONSE_LOG_LEVEL, f"Response: {response}")
-            # print(response)
+# Initialize the index
+index = create_or_load_index(PERSIST_DIR)
+query_engine = index.as_query_engine()
 
+# Streamlit app
+st.title("Calidad Query Interface")
+
+question = st.text_input("Your Question About Calidad?", "")
+if st.button("Submit"):
+    if question:
+        logger.log(QUESTION_LOG_LEVEL, f"Question: {question}")
+        response = query_engine.query(question)
+        logger.log(RESPONSE_LOG_LEVEL, f"Response: {response}")
+        st.write("Response:", response)
+    else:
+        st.error("Please enter a question.")
+
+# Run the Streamlit app
 if __name__ == "__main__":
-    main()
+    import os
+    os.system("streamlit run main.py")

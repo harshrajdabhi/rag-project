@@ -130,6 +130,7 @@ ENV/
 env.bak/
 venv.bak/
 ragenv/
+storage/
 
 # Spyder project settings
 .spyderproject
